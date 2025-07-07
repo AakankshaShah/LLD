@@ -354,3 +354,91 @@ Factory Design Pattern
 
   ```
 
+Abstract Factory Design pattern
+```
+public interface Vehicle {
+    void start();
+}
+public class Bike implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Bike started. Zoom Zoom!");
+    }
+}
+
+public class Scooter implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Scooter started. Whirr!");
+    }
+}
+
+public class Car implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Car started. Vroom Vroom!");
+    }
+}
+
+public class Truck implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Truck started. Heavy load moving!");
+    }
+}
+public interface VehicleFactory {
+    Vehicle createVehicle(String type);
+}
+public class TwoWheelerFactory implements VehicleFactory {
+    @Override
+    public Vehicle createVehicle(String type) {
+        switch (type.toLowerCase()) {
+            case "bike":
+                return new Bike();
+            case "scooter":
+                return new Scooter();
+            default:
+                throw new IllegalArgumentException("Unknown two-wheeler type: " + type);
+        }
+    }
+}
+public class FourWheelerFactory implements VehicleFactory {
+    @Override
+    public Vehicle createVehicle(String type) {
+        switch (type.toLowerCase()) {
+            case "car":
+                return new Car();
+            case "truck":
+                return new Truck();
+            default:
+                throw new IllegalArgumentException("Unknown four-wheeler type: " + type);
+        }
+    }
+}
+public class FactoryProvider {
+    public static VehicleFactory getFactory(String category) {
+        switch (category.toLowerCase()) {
+            case "2":
+            case "twowheeler":
+                return new TwoWheelerFactory();
+            case "4":
+            case "fourwheeler":
+                return new FourWheelerFactory();
+            default:
+                throw new IllegalArgumentException("Unknown category: " + category);
+        }
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        VehicleFactory twoWheelerFactory = FactoryProvider.getFactory("2");
+        Vehicle bike = twoWheelerFactory.createVehicle("bike");
+        bike.start();
+
+        VehicleFactory fourWheelerFactory = FactoryProvider.getFactory("4");
+        Vehicle car = fourWheelerFactory.createVehicle("car");
+        car.start();
+    }
+}
+
+
