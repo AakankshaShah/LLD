@@ -302,4 +302,21 @@ public class Main {
         System.out.println("Total Cost: $" + pizza.getCost());
     }
 }
+```
+
+```
+public class ToppingDecorator implements Pizza {
+    protected Pizza pizza; // No constructor defined here
+}
+public class Cheese extends ToppingDecorator {
+
+    public Cheese(Pizza pizza) {
+        this.pizza = pizza; // ✅ Now valid, since superclass has a no-arg constructor
+    }
+
+    // override methods...
+}
+
+```
+
 
