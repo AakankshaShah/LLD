@@ -150,3 +150,59 @@ public class Main {
 
 
 ```
+```java
+    import java.util.Observable;
+
+public class Product extends Observable {
+    private String name;
+    private boolean inStock = false;
+
+    public Product(String name) {
+        this.name = name;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
+        if (inStock) {
+            setChanged();
+            notifyObservers(); // No argument this time
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+import java.util.Observer;
+import java.util.Observable;
+
+public class User implements Observer {
+    private String email;
+    private Product product; // injected observable
+
+    public User(String email, Product product) {
+        this.email = email;
+        this.product = product;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("Hey " + email + ", the product '" + product.getName() + "' is now back in stock!");
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Product iphone = new Product("iPhone 15 Pro");
+
+        User alice = new User("alice@example.com", iphone);
+        User bob = new User("bob@example.com", iphone);
+
+        iphone.addObserver(alice);
+        iphone.addObserver(bob);
+
+        System.out.println("Restocking iPhone...");
+        iphone.setInStock(true);
+    }
+}
+
+```
