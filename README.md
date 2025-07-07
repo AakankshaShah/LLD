@@ -439,6 +439,18 @@ public class Main {
         Vehicle car = fourWheelerFactory.createVehicle("car");
         car.start();
     }
-}
+} 
+```
+
+| Feature                            | `abstract class`                                  | `interface`                                                 |
+| ---------------------------------- | ------------------------------------------------- | ----------------------------------------------------------- |
+| **Purpose**                        | Partial implementation & shared state             | Pure abstraction (contract)                                 |
+| **Keyword**                        | `abstract class`                                  | `interface`                                                 |
+| **Method implementation allowed?** | ✅ Yes (can have both abstract & concrete methods) | ✅ Since Java 8 (default/static methods)                     |
+| **Can have fields?**               | ✅ Yes (instance variables, static fields)         | ⚠ Only constants (`public static final`)                    |
+| **Constructors allowed?**          | ✅ Yes                                             | ❌ No                                                        |
+| **Multiple inheritance?**          | ❌ No (single abstract class only)                 | ✅ Yes (a class can implement multiple interfaces)           |
+| **Access modifiers?**              | ✅ Yes (public, protected, etc.)                   | ⚠ Only public (methods in interfaces are public by default) |
+| **Suitable for**                   | Closely related classes with shared code          | Unrelated classes needing to follow the same contract       |
 
 
