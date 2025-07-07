@@ -4,6 +4,14 @@ Link : https://gitlab.com/shrayansh8/interviewcodingpractise/-/tree/main/src/Low
 
 <img width="860" alt="image" src="https://github.com/user-attachments/assets/122af20f-a05c-4127-b89d-5d56c6a99234" />
 
+| Principle | Name                                | Summary                                                                                                         |
+| --------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **S**     | **Single Responsibility Principle** | A class should have one and only one reason to change. *(Do one thing well.)*                                   |
+| **O**     | **Open/Closed Principle**           | Software entities should be open for extension but closed for modification. *(You can add, but don’t rewrite.)* |
+| **L**     | **Liskov Substitution Principle**   | Subtypes must be substitutable for their base types. *(A subclass should behave like its parent class.)*        |
+| **I**     | **Interface Segregation Principle** | Clients shouldn’t be forced to depend on methods they don’t use. *(Use small, specific interfaces.)*            |
+| **D**     | **Dependency Inversion Principle**  | Depend on abstractions, not concretions. *(High-level modules shouldn’t depend on low-level details.)*          |
+
 
 Strategy Design Pattern
    ```java
