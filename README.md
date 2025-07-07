@@ -66,6 +66,7 @@ public class OffRoadCar extends BaseCar {
     }
 }
 ```
+
 Observer Design Pattern
 ```java
 
@@ -206,3 +207,99 @@ public class Main {
 }
 
 ```
+
+Decorator Design Pattern
+```java
+public interface Pizza {
+    String getDescription();
+    double getCost();
+}
+public class MargheritaPizza implements Pizza {
+    @Override
+    public String getDescription() {
+        return "Margherita";
+    }
+
+    @Override
+    public double getCost() {
+        return 5.00;
+    }
+}
+
+public class FarmhousePizza implements Pizza {
+    @Override
+    public String getDescription() {
+        return "Farmhouse";
+    }
+
+    @Override
+    public double getCost() {
+        return 6.50;
+    }
+}
+public abstract class ToppingDecorator implements Pizza {
+    protected Pizza pizza;
+
+    public ToppingDecorator(Pizza pizza) {
+        this.pizza = pizza;
+    }
+}
+public class Cheese extends ToppingDecorator {
+    public Cheese(Pizza pizza) {
+        super(pizza);
+    }
+
+    @Override
+    public String getDescription() {
+        return pizza.getDescription() + ", Cheese";
+    }
+
+    @Override
+    public double getCost() {
+        return pizza.getCost() + 1.00;
+    }
+}
+
+public class Olives extends ToppingDecorator {
+    public Olives(Pizza pizza) {
+        super(pizza);
+    }
+
+    @Override
+    public String getDescription() {
+        return pizza.getDescription() + ", Olives";
+    }
+
+    @Override
+    public double getCost() {
+        return pizza.getCost() + 0.75;
+    }
+}
+
+public class Jalapenos extends ToppingDecorator {
+    public Jalapenos(Pizza pizza) {
+        super(pizza);
+    }
+
+    @Override
+    public String getDescription() {
+        return pizza.getDescription() + ", Jalapenos";
+    }
+
+    @Override
+    public double getCost() {
+        return pizza.getCost() + 0.90;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Pizza pizza = new MargheritaPizza();
+        pizza = new Cheese(pizza);
+        pizza = new Olives(pizza);
+        pizza = new Jalapenos(pizza);
+
+        System.out.println("Pizza: " + pizza.getDescription());
+        System.out.println("Total Cost: $" + pizza.getCost());
+    }
+}
+
