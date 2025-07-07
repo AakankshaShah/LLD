@@ -318,5 +318,39 @@ public class Cheese extends ToppingDecorator {
 }
 
 ```
+Factory Design Pattern
+  ```java
+     public interface Vehicle {
+    void start();
+    }
+    public class TwoWheeler implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Two-wheeler is starting. Ready to ride!");
+    }
+   }
 
+   public class FourWheeler implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Four-wheeler is starting. Buckle up!");
+    }
+    }
+     public class VehicleFactory {
+    public static Vehicle createVehicle(String type) {
+        switch (type.toLowerCase()) {
+            case "2":
+            case "twowheeler":
+                return new TwoWheeler();
+            case "4":
+            case "fourwheeler":
+                return new FourWheeler();
+            default:
+                throw new IllegalArgumentException("Unknown vehicle type: " + type);
+        }
+    }
+    }
+
+
+  ```
 
