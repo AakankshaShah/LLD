@@ -454,3 +454,61 @@ public class Main {
 | **Suitable for**                   | Closely related classes with shared code          | Unrelated classes needing to follow the same contract       |
 
 
+Chain of responsibility
+```java
+
+package com.conceptandcoding.LowLevelDesign.DesignPatterns.LLDChainResponsibilityDesignPattern;
+public class Main {
+    public static void main(String args[]) {
+        LogProcessor logObject = new InfoLogProcessor(new DebugLogProcessor(new ErrorLogProcessor(null)));
+        logObject.log(LogProcessor.ERROR, "exception happens");
+        logObject.log(LogProcessor.DEBUG, "need to debug this ");
+        logObject.log(LogProcessor.INFO, "just for info ");
+    }
+}
+ackage com.conceptandcoding.LowLevelDesign.DesignPatterns.LLDChainResponsibilityDesignPattern;
+
+public abstract class LogProcessor {
+
+    public static int INFO = 1;
+    public static int DEBUG = 2;
+    public static int ERROR = 3;
+
+    LogProcessor nextLoggerProcessor;
+
+    LogProcessor(LogProcessor loggerProcessor) {
+
+        this.nextLoggerProcessor = loggerProcessor;
+
+    }
+
+    public void log(int logLevel, String message) {
+
+        if (nextLoggerProcessor != null) {
+            nextLoggerProcessor.log(logLevel, message);
+        }
+    }
+}
+
+
+package com.conceptandcoding.LowLevelDesign.DesignPatterns.LLDChainResponsibilityDesignPattern;
+
+public class InfoLogProcessor extends LogProcessor{
+
+    InfoLogProcessor(LogProcessor nexLogProcessor){
+        super(nexLogProcessor);
+    }
+
+    public void log(int logLevel,String message){
+
+        if(logLevel == INFO) {
+            System.out.println("INFO: " + message);
+        } else{
+
+            super.log(logLevel, message);
+        }
+
+    }
+}
+
+```
