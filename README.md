@@ -512,3 +512,64 @@ public class InfoLogProcessor extends LogProcessor{
 }
 
 ```
+Proxy Design pattern
+```java
+public interface InternetAccess {
+    void connectTo(String serverHost) throws Exception;
+}
+public class RealInternetAccess implements InternetAccess {
+
+    private String employeeName;
+
+    public RealInternetAccess(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    @Override
+    public void connectTo(String serverHost) throws Exception {
+        System.out.println(employeeName + " is connecting to " + serverHost);
+    }
+}
+import java.util.Arrays;
+import java.util.List;
+
+public class ProxyInternetAccess implements InternetAccess {
+
+    private String employeeName;
+    private RealInternetAccess realAccess;
+    private static final List<String> allowedUsers = Arrays.asList("Admin", "CTO", "Manager");
+
+    public ProxyInternetAccess(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    @Override
+    public void connectTo(String serverHost) throws Exception {
+        if (allowedUsers.contains(employeeName)) {
+            realAccess = new RealInternetAccess(employeeName);
+            realAccess.connectTo(serverHost);
+        } else {
+            throw new Exception("Access Denied: " + employeeName + " does not have internet access");
+        }
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        InternetAccess access1 = new ProxyInternetAccess("Admin");
+        InternetAccess access2 = new ProxyInternetAccess("Intern");
+
+        try {
+            access1.connectTo("openai.com");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            access2.connectTo("github.com");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+```
