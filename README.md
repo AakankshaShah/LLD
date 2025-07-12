@@ -841,3 +841,52 @@ public class ATMClient {
 
 
 ```
+Composite Design Pattern
+```
+import java.util.ArrayList;
+import java.util.List;
+
+// Component
+interface FileSystem {
+    void ls();  // list files/directories
+}
+
+// Leaf
+class File implements FileSystem {
+    private String name;
+
+    public File(String name) {
+        this.name = name;
+    }
+
+    public void ls() {
+        System.out.println("File: " + name);
+    }
+}
+
+// Composite
+class Directory implements FileSystem {
+    private String name;
+    private List<FileSystem> children = new ArrayList<>();
+
+    public Directory(String name) {
+        this.name = name;
+    }
+
+    public void add(FileSystem component) {
+        children.add(component);
+    }
+
+    public void remove(FileSystem component) {
+        children.remove(component);
+    }
+
+    public void ls() {
+        System.out.println("Directory: " + name);
+        for (FileSystem child : children) {
+            child.ls();
+        }
+    }
+}
+
+```
