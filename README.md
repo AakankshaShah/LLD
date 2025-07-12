@@ -614,3 +614,78 @@ class NullVehicle implements Vehicle {
 }
 
 ```
+State Desig pattern
+```java
+
+package com.conceptandcoding.LowLevelDesign.DesignVendingMachine.VendingStates;
+import com.conceptandcoding.LowLevelDesign.DesignVendingMachine.Coin;
+import com.conceptandcoding.LowLevelDesign.DesignVendingMachine.Item;
+import com.conceptandcoding.LowLevelDesign.DesignVendingMachine.VendingMachine;
+import java.util.List;
+public interface State {
+    public void clickOnInsertCoinButton(VendingMachine machine) throws Exception;
+    public void clickOnStartProductSelectionButton(VendingMachine machine) throws Exception;
+    public void insertCoin(VendingMachine machine , Coin coin) throws Exception;
+    public void chooseProduct(VendingMachine machine, int codeNumber) throws Exception;
+    public int getChange(int returnChangeMoney) throws Exception;
+    public Item dispenseProduct(VendingMachine machine, int codeNumber) throws Exception;
+    public List<Coin> refundFullMoney(VendingMachine machine) throws Exception;
+    public void updateInventory(VendingMachine machine, Item item, int codeNumber) throws Exception;
+}
+
+package com.conceptandcoding.LowLevelDesign.DesignVendingMachine;
+
+import com.conceptandcoding.LowLevelDesign.DesignVendingMachine.VendingStates.IdleState;
+import com.conceptandcoding.LowLevelDesign.DesignVendingMachine.VendingStates.State;
+
+import java.util.*;
+
+public class VendingMachine {
+    private State currentState;
+    private Map<Integer, Item> inventory = new HashMap<>();
+    private List<Coin> coins = new ArrayList<>();
+
+    public VendingMachine() {
+        this.currentState = new IdleState();
+    }
+
+    public void setCurrentState(State state) {
+        this.currentState = state;
+    }
+
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    public Map<Integer, Item> getInventory() {
+        return inventory;
+    }
+
+    public List<Coin> getCoins() {
+        return coins;
+    }
+
+    // Delegate actions
+    public void clickOnInsertCoinButton() throws Exception {
+        currentState.clickOnInsertCoinButton(this);
+    }
+
+    public void clickOnStartProductSelectionButton() throws Exception {
+        currentState.clickOnStartProductSelectionButton(this);
+    }
+
+    public void insertCoin(Coin coin) throws Exception {
+        currentState.insertCoin(this, coin);
+    }
+
+    public void chooseProduct(int code) throws Exception {
+        currentState.chooseProduct(this, code);
+    }
+
+    public void dispenseProduct(int code) throws Exception {
+        currentState.dispenseProduct(this, code);
+    }
+}
+
+
+```
