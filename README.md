@@ -573,3 +573,44 @@ public class Main {
 }
 
 ```
+Null Object Pattern
+```java
+interface Vehicle {
+    String getType();
+    void startEngine();
+    boolean isNull();
+}
+class Car implements Vehicle {
+    private String name;
+
+    public Car(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return name;
+    }
+
+    public void startEngine() {
+        System.out.println(name + " engine started.");
+    }
+
+    public boolean isNull() {
+        return false;
+    }
+}
+class NullVehicle implements Vehicle {
+    public String getType() {
+        return "Unknown Vehicle";
+    }
+
+    public void startEngine() {
+        System.out.println("No engine to start.");
+    }
+
+    public boolean isNull() {
+        return true;
+    }
+}
+
+```
