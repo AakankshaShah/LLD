@@ -918,3 +918,78 @@ public class Main {
     }
 }
 ```
+Builder Design Pattern
+```
+public class Student {
+    // Required fields
+    private final int id;
+    private final String name;
+
+    // Optional fields
+    private final int age;
+    private final String phone;
+    private final String address;
+
+    // Private constructor — only accessible via Builder
+    private Student(StudentBuilder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.age = builder.age;
+        this.phone = builder.phone;
+        this.address = builder.address;
+    }
+
+    // Getters
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public String getPhone() { return phone; }
+    public String getAddress() { return address; }
+
+    // Builder class (static inner class)
+    public static class StudentBuilder {
+        private final int id;
+        private final String name;
+
+        private int age;
+        private String phone;
+        private String address;
+
+        public StudentBuilder(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public StudentBuilder setAge(int age) {
+            this.age = age;
+            return this;
+        }
+
+        public StudentBuilder setPhone(String phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public StudentBuilder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Student build() {
+            return new Student(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", age=" + age +
+               ", phone='" + phone + '\'' +
+               ", address='" + address + '\'' +
+               '}';
+    }
+}
+
+```
