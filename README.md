@@ -892,40 +892,29 @@ class Directory implements FileSystem {
 ```
 Adaptor Design pattern
 ```java
- public static void main(String args[]){
-
-        WeightMachineAdapter weightMachineAdapter = new WeightMachineAdapterImpl(new WeightMachineForBabies());
-        System.out.println(weightMachineAdapter.getWeightInKg());
+public interface WeightMachine {
+    double getWeightInPound();
+}
+public class WeightMachineForBabies implements WeightMachine {
+    public double getWeightInPound() {
+        return 28;
     }
-public class WeightMachineAdapterImpl implements WeightMachineAdapter{
-
-    WeightMachine weightMachine;
+}
+public class WeightMachineAdapterImpl implements WeightMachineAdapter {
+    private final WeightMachine weightMachine;
 
     public WeightMachineAdapterImpl(WeightMachine weightMachine) {
         this.weightMachine = weightMachine;
     }
 
-    @Override
     public double getWeightInKg() {
-
-        double weightInPound = weightMachine.getWeightInPound();
-
-        //Convert it to KGs
-        double weightInKg = weightInPound * .45;
-        return weightInKg;
+        return weightMachine.getWeightInPound() * 0.45;
     }
 }
-public interface WeightMachine {
-
-    //return the weight in Pound
-    public double getWeightInPound();
-}
-
-
-public class WeightMachineForBabies implements WeightMachine{
-    @Override
-    public double getWeightInPound() {
-        return 28;
+public class Main {
+    public static void main(String[] args) {
+        WeightMachineAdapter adapter = new WeightMachineAdapterImpl(new WeightMachineForBabies());
+        System.out.println("Weight in Kg: " + adapter.getWeightInKg());
     }
 }
 ```
