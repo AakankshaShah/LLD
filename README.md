@@ -689,3 +689,155 @@ public class VendingMachine {
 
 
 ```
+``` java
+//ATM
+public abstract class ATMState {
+    public void insertCard(ATM atm, Card card) { ... }
+    public void authenticatePin(ATM atm, Card card, int pin) { ... }
+    public void selectOperation(ATM atm, Card card, TransactionType txnType) { ... }
+    public void cashWithdrawal(ATM atm, Card card, int amount) { ... }
+    public void displayBalance(ATM atm, Card card) { ... }
+    public void returnCard() { ... }
+    public void exit(ATM atm) { ... }
+}
+public class IdleState extends ATMState {
+    @Override
+    public void insertCard(ATM atm, Card card) {
+        System.out.println("Card inserted.");
+        atm.setCurrentATMState(new CardInsertedState());
+    }
+}
+
+public class IdleState extends ATMState {
+    @Override
+    public void insertCard(ATM atm, Card card) {
+        System.out.println("Card inserted.");
+        atm.setCurrentATMState(new CardInsertedState());
+    }
+}
+public class PinAuthenticatedState extends ATMState {
+    @Override
+    public void selectOperation(ATM atm, Card card, TransactionType txnType) {
+        switch (txnType) {
+            case CASH_WITHDRAWAL -> atm.setCurrentATMState(new CashWithdrawalState());
+            case BALANCE_CHECK -> {
+                atm.setCurrentATMState(new TransactionState());
+                atm.getCurrentATMState().displayBalance(atm, card);
+            }
+        }
+    }
+}
+public class CashWithdrawalState extends ATMState {
+    @Override
+    public void cashWithdrawal(ATM atm, Card card, int amount) {
+        if (amount > card.getBankBalance()) {
+            System.out.println("Insufficient funds.");
+            return;
+        }
+
+        if (amount > atm.getCash()) {
+            System.out.println("ATM has insufficient cash.");
+            return;
+        }
+
+        atm.getCashDispenser().dispense(amount);
+        atm.deductATMBalance(amount);
+        card.deductBankBalance(amount);
+
+        System.out.println("Withdrawal successful. Please collect your cash.");
+        atm.setCurrentATMState(new IdleState());
+    }
+}
+public class TransactionState extends ATMState {
+    @Override
+    public void displayBalance(ATM atm, Card card) {
+        System.out.println("Your account balance is: ₹" + card.getBankBalance());
+        atm.setCurrentATMState(new IdleState());
+    }
+}
+public class ExitState extends ATMState {
+    @Override
+    public void exit(ATM atm) {
+        System.out.println("Thank you. Ejecting card...");
+        atm.setCurrentATMState(new IdleState());
+    }
+}
+public class ATM {
+    private ATMState currentATMState;
+    private int cash;
+    private CashDispenser cashDispenser;
+
+    public ATM() {
+        this.currentATMState = new IdleState();
+        this.cash = 100000; // initial cash
+        initializeDispenserChain();
+    }
+
+    public void setCurrentATMState(ATMState state) {
+        this.currentATMState = state;
+    }
+
+    public ATMState getCurrentATMState() {
+        return currentATMState;
+    }
+
+    public int getCash() {
+        return cash;
+    }
+
+    public void deductATMBalance(int amount) {
+        this.cash -= amount;
+    }
+
+    public CashDispenser getCashDispenser() {
+        return cashDispenser;
+    }
+
+    private void initializeDispenserChain() {
+        this.cashDispenser = new TwoThousandDispenser();
+        CashDispenser fiveHundred = new FiveHundredDispenser();
+        CashDispenser oneHundred = new OneHundredDispenser();
+
+        cashDispenser.setNext(fiveHundred);
+        fiveHundred.setNext(oneHundred);
+    }
+}
+public abstract class CashDispenser {
+    protected CashDispenser next;
+
+    public void setNext(CashDispenser next) {
+        this.next = next;
+    }
+
+    public void dispense(int amount) {
+        if (next != null) next.dispense(amount);
+    }
+}
+public class TwoThousandDispenser extends CashDispenser {
+    @Override
+    public void dispense(int amount) {
+        int notes = amount / 2000;
+        int remainder = amount % 2000;
+        if (notes > 0) System.out.println("Dispensing " + notes + " x ₹2000 notes");
+        if (remainder > 0 && next != null) next.dispense(remainder);
+    }
+}
+public class ATMClient {
+    public static void main(String[] args) {
+        ATM atm = new ATM();
+        Card card = new Card(1234, 5000);
+
+        try {
+            atm.getCurrentATMState().insertCard(atm, card);
+            atm.getCurrentATMState().authenticatePin(atm, card, 1234);
+            atm.getCurrentATMState().selectOperation(atm, card, TransactionType.CASH_WITHDRAWAL);
+            atm.getCurrentATMState().cashWithdrawal(atm, card, 3700);
+            atm.getCurrentATMState().exit(atm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+```
