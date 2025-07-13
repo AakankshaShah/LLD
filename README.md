@@ -919,7 +919,7 @@ public class Main {
 }
 ```
 Builder Design Pattern
-```
+```java
 public class Student {
     // Required fields
     private final int id;
