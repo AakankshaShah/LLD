@@ -994,7 +994,7 @@ public class Student {
 
 ```
 Bridge Design pattern
-```
+```java
 // Implementation hierarchy
 interface BreathingMechanism {
     void breathe();
