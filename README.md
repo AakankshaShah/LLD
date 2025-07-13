@@ -993,3 +993,72 @@ public class Student {
 }
 
 ```
+Bridge Design pattern
+```
+// Implementation hierarchy
+interface BreathingMechanism {
+    void breathe();
+}
+
+class Lungs implements BreathingMechanism {
+    public void breathe() {
+        System.out.println("Breathing through lungs");
+    }
+}
+
+class Gills implements BreathingMechanism {
+    public void breathe() {
+        System.out.println("Breathing through gills");
+    }
+}
+
+// Abstraction hierarchy
+abstract class LivingThing {
+    protected BreathingMechanism mechanism;
+
+    public LivingThing(BreathingMechanism mechanism) {
+        this.mechanism = mechanism;
+    }
+
+    abstract void performBreathe();
+}
+
+class Human extends LivingThing {
+    public Human(BreathingMechanism mechanism) {
+        super(mechanism);
+    }
+
+    public void performBreathe() {
+        System.out.print("Human is ");
+        mechanism.breathe();
+    }
+}
+
+class Fish extends LivingThing {
+    public Fish(BreathingMechanism mechanism) {
+        super(mechanism);
+    }
+
+    public void performBreathe() {
+        System.out.print("Fish is ");
+        mechanism.breathe();
+    }
+}
+
+// Main
+public class Main {
+    public static void main(String[] args) {
+        LivingThing human = new Human(new Lungs());
+        human.performBreathe(); // Output: Human is Breathing through lungs
+
+        LivingThing fish = new Fish(new Gills());
+        fish.performBreathe(); // Output: Fish is Breathing through gills
+    }
+}
+
+```
+```
+Use Strategy when you want to swap behavior at runtime (e.g., change breathing due to environment).
+
+Use Bridge when you have two independent dimensions you want to vary (e.g., types of organisms and types of breathing systems).
+```
