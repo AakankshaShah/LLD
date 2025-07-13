@@ -1104,3 +1104,47 @@ public class Main {
 | Shallow Copy | ✅                       | ✅ (shared)               | ❌                     |
 | Deep Copy    | ✅                       | ❌ (new objects created)  | ✅                     |
 
+Flyweight Design Pattern
+```java
+public interface ILetter {
+    void display(int row, int column, String fontType, int size);
+}
+public class DocumentCharacter implements ILetter {
+
+    private final char character; // Intrinsic only
+
+    DocumentCharacter(char character) {
+        this.character = character;
+    }
+
+    @Override
+    public void display(int row, int column, String fontType, int size) {
+        System.out.println("Displaying '" + character + "' at (" + row + "," + column + ")"
+                           + " with font '" + fontType + "' and size " + size);
+    }
+}
+public class LetterFactory {
+
+    private static final Map<Character, ILetter> characterCache = new HashMap<>();
+
+    public static ILetter createLetter(char characterValue) {
+        return characterCache.computeIfAbsent(characterValue, c -> new DocumentCharacter(c));
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        ILetter t1 = LetterFactory.createLetter('t');
+        t1.display(0, 0, "Arial", 12);
+
+        ILetter t2 = LetterFactory.createLetter('t');
+        t2.display(0, 6, "Arial", 12);
+
+        ILetter h = LetterFactory.createLetter('h');
+        h.display(0, 1, "Times New Roman", 14);
+
+       
+    }
+}
+
+```
+
