@@ -1062,3 +1062,45 @@ Use Strategy when you want to swap behavior at runtime (e.g., change breathing d
 
 Use Bridge when you have two independent dimensions you want to vary (e.g., types of organisms and types of breathing systems).
 ```
+Prototype Design pattern
+```java
+public interface Prototype {
+    Prototype clone();
+}
+public class Student implements Prototype {
+    private String name;
+    private int age;
+    private String course;
+
+    public Student(String name, int age, String course) {
+        this.name = name;
+        this.age = age;
+        this.course = course;
+    }
+
+    @Override
+    public Prototype clone() {
+        return new Student(name, age, course);  // Shallow copy
+    }
+
+    @Override
+    public String toString() {
+        return "Student{name='" + name + "', age=" + age + ", course='" + course + "'}";
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Student original = new Student("Alice", 20, "Computer Science");
+        Student copy = (Student) original.clone();
+
+        System.out.println("Original: " + original);
+        System.out.println("Copy:     " + copy);
+    }
+}
+
+```
+| Copy Type    | Copies Primitive Fields | Copies Object References | Nested Objects Copied |
+| ------------ | ----------------------- | ------------------------ | --------------------- |
+| Shallow Copy | ✅                       | ✅ (shared)               | ❌                     |
+| Deep Copy    | ✅                       | ❌ (new objects created)  | ✅                     |
+
