@@ -1159,6 +1159,8 @@ Iterator Design Pattern
 <img width="1674" height="878" alt="image" src="https://github.com/user-attachments/assets/3047ed7c-021e-4af9-b571-4087f937d021" />
 
 
+Mediator Design Pattern
+<img width="2592" height="1514" alt="image" src="https://github.com/user-attachments/assets/778bd69d-679a-440b-953e-895c55e970d4" />
 
 
 
