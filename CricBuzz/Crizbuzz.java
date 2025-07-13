@@ -114,47 +114,74 @@ class ScorePublisher {
         }
     }
 }
-class Main {
+class BallProcessor {
+    private final ScorePublisher publisher;
+    private final Innings innings;
+    private Over currentOver = new Over();
+    private int ballInOver = 0;
+
+    public BallProcessor(Innings innings, ScorePublisher publisher) {
+        this.innings = innings;
+        this.publisher = publisher;
+    }
+
+    public void processBall(BallDetails ball) {
+        currentOver.balls.add(ball);
+        ballInOver++;
+
+        publisher.publish(ball, innings.scorecard);
+
+        boolean isLegal = ball.ballType == BallType.LEGIT;
+        if (isLegal && ballInOver == 6) {
+            // Over complete
+            currentOver.bowler = ball.bowler;
+            innings.overs.add(currentOver);
+            innings.scorecard.totalOvers++;
+
+            // Reset for new over
+            currentOver = new Over();
+            ballInOver = 0;
+        }
+
+        // Handle innings end (optional): e.g. if 10 wickets fall
+        if (innings.scorecard.totalWickets >= 10) {
+            System.out.println("Innings over!");
+        }
+    }
+}
+
+public class Main {
     public static void main(String[] args) {
         Player p1 = new Player(); p1.name = "Kohli";
         Player p2 = new Player(); p2.name = "Bumrah";
 
-        Scorecard scorecard = new Scorecard();
+        Team teamA = new Team(); teamA.name = "India"; teamA.players = Arrays.asList(p1);
+        Team teamB = new Team(); teamB.name = "Australia"; teamB.players = Arrays.asList(p2);
+
+        Innings innings = new Innings();
+        innings.battingTeam = teamA;
+        innings.bowlingTeam = teamB;
+
         ScorePublisher publisher = new ScorePublisher();
         publisher.register(new BallScoreUpdater());
         publisher.register(new BowlingScoreUpdater());
 
-        BallDetails ball = new BallDetails();
-        ball.batsman = p1;
-        ball.bowler = p2;
-        ball.runs = 4;
-        ball.runType = RunType.FOUR;
-        ball.ballType = BallType.LEGIT;
-        publisher.publish(ball, scorecard);
+        BallProcessor processor = new BallProcessor(innings, publisher);
 
-        BallDetails ball2 = new BallDetails();
-        ball2.batsman = p1;
-        ball2.bowler = p2;
-        ball2.runs = 0;
-        ball2.ballType = BallType.LEGIT;
-        ball2.wicket = new Wicket();
-        ball2.wicket.outPlayer = p1;
-        ball2.wicket.bowler = p2;
-        ball2.wicket.wicketType = WicketType.BOWLED;
+        // Simulate some balls
+        for (int i = 0; i < 6; i++) {
+            BallDetails ball = new BallDetails();
+            ball.batsman = p1;
+            ball.bowler = p2;
+            ball.runs = i;  // Varying runs
+            ball.ballType = BallType.LEGIT;
+            ball.runType = RunType.NORMAL;
 
-        // publish wicket
-        publisher.publish(ball2, scorecard);
-
-        System.out.println("Total Runs: " + scorecard.totalRuns);
-        System.out.println("Total Wickets: " + scorecard.totalWickets);
-        System.out.println("Batting Stats:");
-        for (Map.Entry<Player, Integer> entry : scorecard.batsmanRuns.entrySet()) {
-            System.out.println(entry.getKey().name + ": " + entry.getValue() + " runs in " + scorecard.batsmanBalls.get(entry.getKey()) + " balls");
+            processor.processBall(ball);
         }
-        System.out.println("Bowling Stats:");
-        for (Map.Entry<Player, Integer> entry : scorecard.bowlerWickets.entrySet()) {
-            System.out.println(entry.getKey().name + ": " + entry.getValue() + " wickets, " + scorecard.bowlerRuns.get(entry.getKey()) + " runs in " + scorecard.bowlerBalls.get(entry.getKey()) + " balls");
-        }
+
+        System.out.println("Overs bowled: " + innings.scorecard.totalOvers);
+        System.out.println("Total Runs: " + innings.scorecard.totalRuns);
     }
 }
 // Can add Match Type
