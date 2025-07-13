@@ -1,0 +1,14 @@
+Player
+Team
+Match
+Innings
+Scorecard
+BallDeatils
+Over
+Runtype
+Balltype
+Wicket
+wicketType
+BallScoreUPdater
+BowlingScoreUpdater
+ScoreUpdaterObserver
