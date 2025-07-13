@@ -1147,4 +1147,10 @@ public class Main {
 }
 
 ```
+Comman Design Pattern
+
+
+
+<img width="3082" height="1618" alt="image" src="https://github.com/user-attachments/assets/2e8cbd6b-f40d-4a64-9f39-16629f288ffd" />
+
 
