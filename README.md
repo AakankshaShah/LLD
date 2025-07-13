@@ -1147,10 +1147,18 @@ public class Main {
 }
 
 ```
-Comman Design Pattern
+Command Design Pattern
 
 
 
 <img width="3082" height="1618" alt="image" src="https://github.com/user-attachments/assets/2e8cbd6b-f40d-4a64-9f39-16629f288ffd" />
+
+Iterator Design Pattern
+
+<img width="1736" height="1318" alt="image" src="https://github.com/user-attachments/assets/cc135646-8677-4d9c-bb92-446098ef68d2" />
+<img width="1674" height="878" alt="image" src="https://github.com/user-attachments/assets/3047ed7c-021e-4af9-b571-4087f937d021" />
+
+
+
 
 
