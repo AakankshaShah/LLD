@@ -1163,4 +1163,95 @@ Mediator Design Pattern
 <img width="2592" height="1514" alt="image" src="https://github.com/user-attachments/assets/778bd69d-679a-440b-953e-895c55e970d4" />
 
 
+LLD Apply Coupon
+```java
+public abstract class Product {
+    protected String name;
+    protected double price;
+    protected String category;
 
+    public Product(String name, double price, String category) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+    }
+
+    public abstract double getPrice();
+    public String getName() {
+        return name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+}
+public class SimpleProduct extends Product {
+
+    public SimpleProduct(String name, double price, String category) {
+        super(name, price, category);
+    }
+
+    @Override
+    public double getPrice() {
+        return price;
+    }
+}
+public abstract class CouponDecorator extends Product {
+    protected Product product;
+
+    public CouponDecorator(Product product) {
+        super(product.getName(), product.getPrice(), product.getCategory());
+        this.product = product;
+    }
+
+    @Override
+    public abstract double getPrice();
+}
+public class PercentageCouponDecorator extends CouponDecorator {
+    private double discountPercentage;
+
+    public PercentageCouponDecorator(Product product, double discountPercentage) {
+        super(product);
+        this.discountPercentage = discountPercentage;
+    }
+
+    @Override
+    public double getPrice() {
+        double basePrice = product.getPrice();
+        double discount = basePrice * (discountPercentage / 100);
+        return basePrice - discount;
+    }
+}
+public class TypeCouponDecorator extends CouponDecorator {
+    private String applicableCategory;
+    private double discountAmount;
+
+    public TypeCouponDecorator(Product product, String applicableCategory, double discountAmount) {
+        super(product);
+        this.applicableCategory = applicableCategory;
+        this.discountAmount = discountAmount;
+    }
+
+    @Override
+    public double getPrice() {
+        if (product.getCategory().equalsIgnoreCase(applicableCategory)) {
+            return product.getPrice() - discountAmount;
+        }
+        return product.getPrice();
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Product baseProduct = new SimpleProduct("Laptop", 1000.0, "electronics");
+
+        // Apply 10% discount
+        Product withPercentageDiscount = new PercentageCouponDecorator(baseProduct, 10);
+
+        // Then apply ₹100 off for electronics category
+        Product productWithEligibleDiscount = new TypeCouponDecorator(withPercentageDiscount, "electronics", 100);
+
+        System.out.println("Final Price: ₹" + productWithEligibleDiscount.getPrice());
+    }
+}
+
+```
