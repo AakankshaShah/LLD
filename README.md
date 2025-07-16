@@ -1255,3 +1255,72 @@ public class Main {
 }
 
 ```
+Object Pool Design Pattern
+```java
+public class DBConnection {
+    private static int counter = 0;
+    private final int id;
+
+    public DBConnection() {
+        this.id = ++counter;
+        System.out.println("DBConnection #" + id + " created.");
+    }
+
+    public void execute(String query) {
+        System.out.println("DBConnection #" + id + " executing: " + query);
+    }
+
+    public int getId() {
+        return id;
+    }
+}
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class ConnectionPool {
+    private final BlockingQueue<DBConnection> freeConnections;
+    private final int maxPoolSize;
+    private final AtomicInteger currentPoolSize = new AtomicInteger(0);
+
+    public ConnectionPool(int initialSize, int maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
+        this.freeConnections = new LinkedBlockingQueue<>();
+
+        for (int i = 0; i < initialSize; i++) {
+            freeConnections.offer(new DBConnection());
+            currentPoolSize.incrementAndGet();
+        }
+    }
+
+    public synchronized DBConnection acquireConnection() {
+        DBConnection conn = freeConnections.poll();
+
+        if (conn != null) {
+            return conn;
+        }
+
+        if (currentPoolSize.get() < maxPoolSize) {
+            DBConnection newConn = new DBConnection();
+            currentPoolSize.incrementAndGet();
+            return newConn;
+        }
+
+        throw new RuntimeException("All connections in use. Pool exhausted.");
+    }
+
+    public synchronized void releaseConnection(DBConnection conn) {
+        freeConnections.offer(conn);
+    }
+
+    // Optional status methods
+    public int getFreeCount() {
+        return freeConnections.size();
+    }
+
+    public int getInUseCount() {
+        return currentPoolSize.get() - getFreeCount();
+    }
+}
+//Constrcutor private for singleton pattern
+```
