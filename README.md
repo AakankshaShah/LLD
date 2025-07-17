@@ -1372,6 +1372,37 @@ public interface RoomVisitor {
     void visit(DeluxeRoom room);
     void visit(SuiteRoom room);
 }
+public class RoomPriceVisitor implements RoomVisitor {
+    private double totalPrice = 0;
+
+    @Override
+    public void visit(DeluxeRoom room) {
+        System.out.printf("Deluxe Room price: $%.2f%n", room.getPrice());
+        totalPrice += room.getPrice();
+    }
+
+    @Override
+    public void visit(SuiteRoom room) {
+        System.out.printf("Suite Room price: $%.2f%n", room.getPrice());
+        totalPrice += room.getPrice();
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+}
+public class RoomMaintenanceVisitor implements RoomVisitor {
+    @Override
+    public void visit(DeluxeRoom room) {
+        System.out.println("Inspect AC and clean carpets in Deluxe Room.");
+    }
+
+    @Override
+    public void visit(SuiteRoom room) {
+        System.out.println("Full inspection, minibar restock, and AC service in Suite Room.");
+    }
+}
+
 
 ```
 
