@@ -1324,5 +1324,54 @@ public class ConnectionPool {
 }
 //Constrcutor private for singleton pattern
 ```
-![Uploading image.png…]()
+<img width="1156" height="958" alt="image" src="https://github.com/user-attachments/assets/670c3968-0cd2-48ba-9f8f-59ddb493e001" />
+
+
+Visitor Design Pattern
+```java
+public interface HotelRoom {
+    void accept(RoomVisitor visitor);
+    double getPrice();
+}
+public class DeluxeRoom implements HotelRoom {
+    private double price;
+
+    public DeluxeRoom(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public void accept(RoomVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public double getPrice() {
+        return price;
+    }
+}
+
+public class SuiteRoom implements HotelRoom {
+    private double price;
+
+    public SuiteRoom(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public void accept(RoomVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public double getPrice() {
+        return price;
+    }
+}
+public interface RoomVisitor {
+    void visit(DeluxeRoom room);
+    void visit(SuiteRoom room);
+}
+
+```
 
