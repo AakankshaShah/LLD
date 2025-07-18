@@ -1431,5 +1431,10 @@ Controller is brain
 ```
 
 Memento design Pattern
-```
+
+<img width="2112" height="1520" alt="image" src="https://github.com/user-attachments/assets/218ebebd-a8f7-45d2-b224-40c6ab4b22d8" />
+
+<img width="2016" height="1324" alt="image" src="https://github.com/user-attachments/assets/7a6eb016-aa9f-4222-a331-f718faa1565f" />
+
+
 
