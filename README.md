@@ -1402,6 +1402,31 @@ public class RoomMaintenanceVisitor implements RoomVisitor {
         System.out.println("Full inspection, minibar restock, and AC service in Suite Room.");
     }
 }
+```
+MVC Design pattern
+Model 
+View 
+Controller
+
+```
+User enters username/password
+           |
+           v
+     [Login Form (View)]
+           |
+           v
+[LoginController validates input]
+           |
+           v
+ [UserModel checks DB for credentials]
+           |
+           v
+[UserModel updates state: "login success" or "fail"]
+           |
+           v
+[LoginView displays message]
+
+```
 
 
 ```
