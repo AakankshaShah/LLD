@@ -1443,4 +1443,220 @@ Template Design Pattern
 Interpreter Design Pattern
 <img width="3330" height="1320" alt="image" src="https://github.com/user-attachments/assets/6692b3eb-1e43-4503-9890-31f11bfcf29a" />
 
+Payment Gateway 
+<img width="1044" height="696" alt="image" src="https://github.com/user-attachments/assets/b96c8225-f3fd-40fe-b60c-5c6abe9a51f7" />
+<img width="1414" height="1518" alt="image" src="https://github.com/user-attachments/assets/734a8b6b-fd83-41f9-9563-d8d774e7476b" />
+```java
+enum TransactionStatus {
+    SUCCESS, PENDING, DENIED
+}
+
+enum InstrumentType {
+    BANK, CARD
+}
+class User {
+    private int userId;
+    private String name;
+    private String email;
+
+    public User() {}
+    public User(int id, String name, String email) {
+        this.userId = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public int getUserId() { return userId; }
+    public void setUserId(int id) { this.userId = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+}
+
+abstract class InstrumentEntity {
+    int instrumentID;
+    int userID;
+    InstrumentType type;
+}
+
+class BankInstrument extends InstrumentEntity {
+    String bankAccountNo;
+    String ifscCode;
+}
+
+class CardInstrument extends InstrumentEntity {
+    String cardNumber;
+    String cvvNumber;
+}
+
+class Transaction {
+    int txnID;
+    int amount;
+    int senderUserID;
+    int receiverUserID;
+    int debitInstrumentID;
+    int creditInstrumentID;
+    TransactionStatus status;
+}
+class UserService {
+    private static List<User> users = new ArrayList<>();
+
+    public void addUser(User user) {
+        users.add(user);
+    }
+
+    public User getUser(int id) {
+        for (User user : users) {
+            if (user.getUserId() == id) {
+                return user;
+            }
+        }
+        return null;
+    }
+}
+abstract class InstrumentService {
+    static Map<Integer, List<InstrumentEntity>> obj = new HashMap<>();
+
+    public abstract void addInstrument(InstrumentEntity instrument);
+    public abstract InstrumentEntity getInstrument(int userID, int instrumentID);
+}
+class BankService extends InstrumentService {
+    public void addInstrument(InstrumentEntity instrument) {
+        obj.computeIfAbsent(instrument.userID, k -> new ArrayList<>()).add(instrument);
+    }
+
+    public InstrumentEntity getInstrument(int userID, int instrumentID) {
+        for (InstrumentEntity ie : obj.getOrDefault(userID, new ArrayList<>())) {
+            if (ie.instrumentID == instrumentID) return ie;
+        }
+        return null;
+    }
+}
+
+class CardService extends InstrumentService {
+    public void addInstrument(InstrumentEntity instrument) {
+        obj.computeIfAbsent(instrument.userID, k -> new ArrayList<>()).add(instrument);
+    }
+
+    public InstrumentEntity getInstrument(int userID, int instrumentID) {
+        for (InstrumentEntity ie : obj.getOrDefault(userID, new ArrayList<>())) {
+            if (ie.instrumentID == instrumentID) return ie;
+        }
+        return null;
+    }
+}
+class InstrumentServiceFactory {
+    public InstrumentService getInstrumentService(InstrumentType type) {
+        return switch (type) {
+            case BANK -> new BankService();
+            case CARD -> new CardService();
+        };
+    }
+}
+class Processor {
+    public void processPayment(Transaction txn) {
+        // Mock logic
+        txn.status = TransactionStatus.SUCCESS;
+    }
+}
+class TxnService {
+    InstrumentController instCtrlObj = new InstrumentController();
+    Processor processorObj = new Processor();
+    Map<Integer, List<Transaction>> obj = new HashMap<>();
+
+    public void makePayment(Transaction txn) {
+        processorObj.processPayment(txn);
+        obj.computeIfAbsent(txn.senderUserID, k -> new ArrayList<>()).add(txn);
+    }
+
+    public List<Transaction> getTxnHistory(int userId) {
+        return obj.getOrDefault(userId, new ArrayList<>());
+    }
+}
+class UserController {
+    private UserService userService = new UserService();
+
+    public void addUser(User user) {
+        userService.addUser(user);
+    }
+
+    public User getUser(int id) {
+        return userService.getUser(id);
+    }
+}
+
+class InstrumentController {
+    InstrumentServiceFactory factory = new InstrumentServiceFactory();
+
+    public void addInstrument(InstrumentEntity instrument) {
+        InstrumentService service = factory.getInstrumentService(instrument.type);
+        service.addInstrument(instrument);
+    }
+
+    public InstrumentEntity getInstrument(InstrumentType type, int userID, int instrumentID) {
+        InstrumentService service = factory.getInstrumentService(type);
+        return service.getInstrument(userID, instrumentID);
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        // ----- Setup -----
+        UserController userController = new UserController();
+        InstrumentController instrumentController = new InstrumentController();
+        TxnService txnService = new TxnService();
+
+        // ----- 1. Add Users -----
+        User user1 = new User(1, "Aman", "aman@example.com");
+        User user2 = new User(2, "Riya", "riya@example.com");
+        userController.addUser(user1);
+        userController.addUser(user2);
+
+        // ----- 2. Add Bank Instrument for Aman -----
+        BankInstrument bank = new BankInstrument();
+        bank.instrumentID = 1001;
+        bank.userID = 1;
+        bank.bankAccountNo = "AMAN123456";
+        bank.ifscCode = "IFSC1001";
+        bank.type = InstrumentType.BANK;
+        instrumentController.addInstrument(bank);
+
+        // ----- 3. Add Card Instrument for Riya -----
+        CardInstrument card = new CardInstrument();
+        card.instrumentID = 2001;
+        card.userID = 2;
+        card.cardNumber = "4111111111111111";
+        card.cvvNumber = "123";
+        card.type = InstrumentType.CARD;
+        instrumentController.addInstrument(card);
+
+        // ----- 4. Make a Payment from Aman to Riya -----
+        Transaction txn = new Transaction();
+        txn.txnID = 5001;
+        txn.amount = 100;
+        txn.senderUserID = 1;
+        txn.receiverUserID = 2;
+        txn.debitInstrumentID = 1001; // Bank of Aman
+        txn.creditInstrumentID = 2001; // Card of Riya
+        txnService.makePayment(txn);
+
+        // ----- 5. View Transaction History for Aman -----
+        System.out.println("Transaction history for Aman:");
+        for (Transaction t : txnService.getTxnHistory(1)) {
+            System.out.println("TxnID: " + t.txnID +
+                    ", Amount: " + t.amount +
+                    ", To: " + t.receiverUserID +
+                    ", Status: " + t.status);
+        }
+    }
+}
+
+
+
+```
+
+```
+
 
