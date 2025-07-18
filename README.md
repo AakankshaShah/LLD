@@ -1440,5 +1440,7 @@ Template Design Pattern
 
 <img width="2416" height="1604" alt="image" src="https://github.com/user-attachments/assets/8b9b1475-de6d-41a3-863c-0e0902cc10f6" />
 
+Interpreter Design Pattern
+<img width="3330" height="1320" alt="image" src="https://github.com/user-attachments/assets/6692b3eb-1e43-4503-9890-31f11bfcf29a" />
 
 
