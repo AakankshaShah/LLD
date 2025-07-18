@@ -614,7 +614,7 @@ class NullVehicle implements Vehicle {
 }
 
 ```
-State Desig pattern
+State Design pattern
 ```java
 
 package com.conceptandcoding.LowLevelDesign.DesignVendingMachine.VendingStates;
