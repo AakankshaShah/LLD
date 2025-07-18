@@ -1426,6 +1426,8 @@ User enters username/password
            v
 [LoginView displays message]
 
+Controller is brain
+
 ```
 
 
