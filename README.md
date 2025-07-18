@@ -1436,5 +1436,9 @@ Memento design Pattern
 
 <img width="2016" height="1324" alt="image" src="https://github.com/user-attachments/assets/7a6eb016-aa9f-4222-a331-f718faa1565f" />
 
+Template Design Pattern
+
+<img width="2416" height="1604" alt="image" src="https://github.com/user-attachments/assets/8b9b1475-de6d-41a3-863c-0e0902cc10f6" />
+
 
 
