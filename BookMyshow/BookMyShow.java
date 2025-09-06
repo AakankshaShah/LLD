@@ -199,3 +199,37 @@ public class BookMyShow {
         scanner.close();
     }
 }
+
+// Finer grain locking so other seats can booked
+// class Seat {
+//     int seatNumber;
+//     boolean isAvailable;
+//     final Object lock = new Object();
+
+//     public Seat(int number) {
+//         this.seatNumber = number;
+//         this.isAvailable = true;
+//     }
+
+//     public boolean book() {
+//         synchronized(lock) {
+//             if (!isAvailable) return false;
+//             isAvailable = false;
+//             return true;
+//         }
+//     }
+// }
+
+// class Show {
+//     // ...
+
+//     public boolean bookSeat(int seatNumber) {
+//         for (Seat seat : seats) {
+//             if (seat.seatNumber == seatNumber) {
+//                 return seat.book();
+//             }
+//         }
+//         return false;
+//     }
+// }
+
