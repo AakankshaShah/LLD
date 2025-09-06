@@ -60,14 +60,14 @@ class Show {
         System.out.println();
     }
 
-    public boolean bookSeat(int seatNumber) {
+      public synchronized boolean bookSeat(int seatNumber) {
         for (Seat seat : seats) {
             if (seat.seatNumber == seatNumber && seat.isAvailable) {
-                seat.isAvailable = false;
+                seat.isAvailable = false; 
                 return true;
             }
         }
-        return false;
+        return false; 
     }
 }
 class Theatre {
